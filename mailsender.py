@@ -15,20 +15,14 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-# =========================================================
 # GOOGLE SCOPES
-# =========================================================
-
 SCOPES = [
     "https://www.googleapis.com/auth/gmail.send",
     "https://www.googleapis.com/auth/calendar",
 ]
 
 
-# =========================================================
 # GET SECRET
-# =========================================================
-
 def get_secret(name):
 
     # Streamlit Cloud
@@ -45,10 +39,7 @@ def get_secret(name):
     return os.getenv(name)
 
 
-# =========================================================
 # GET GOOGLE CREDENTIALS
-# =========================================================
-
 def get_credentials():
 
     token_str = get_secret("GOOGLE_TOKEN_JSON")
@@ -86,10 +77,7 @@ def get_credentials():
     return creds
 
 
-# =========================================================
 # SEND EMAIL
-# =========================================================
-
 def send_email(to, subject, message_text):
 
     creds = get_credentials()
@@ -121,10 +109,7 @@ def send_email(to, subject, message_text):
     return f"Email sent to {to}."
 
 
-# =========================================================
 # CREATE CALENDAR EVENT + GOOGLE MEET
-# =========================================================
-
 def create_event(
     summary,
     description,
