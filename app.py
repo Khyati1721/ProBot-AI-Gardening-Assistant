@@ -1,4 +1,3 @@
-```python
 import streamlit as st
 from langchain_groq import ChatGroq
 from langchain.agents import create_agent
@@ -572,4 +571,4 @@ else:
                         )
 
                     st.markdown(ai_answer)
-```
+
