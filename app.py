@@ -19,30 +19,21 @@ import os
 import requests
 
 
-# ============================================================
 # ENVIRONMENT
-# ============================================================
-
 load_dotenv()
 
 groq_api_key = os.getenv("GROQ_API_KEY")
 weather_api_key = os.getenv("WEATHER_API_KEY")
 
 
-# ============================================================
 # LLM
-# ============================================================
-
 llm = ChatGroq(
     model="openai/gpt-oss-20b",
     api_key=groq_api_key
 )
 
 
-# ============================================================
 # RAG CHAIN
-# ============================================================
-
 custom_prompt = ChatPromptTemplate.from_template("""
 You are a helpful gardening assistant.
 
@@ -77,10 +68,7 @@ if "rag_chain" not in st.session_state:
     )
 
 
-# ============================================================
 # TOOLS
-# ============================================================
-
 @tool
 def get_weather(city: str) -> str:
     """
@@ -230,10 +218,7 @@ def schedule_meeting_input_string(input_string: str):
         return f"Error parsing meeting input: {str(e)}"
 
 
-# ============================================================
 # TOOLS LIST
-# ============================================================
-
 tools = [
     get_weather,
     rag_tool,
@@ -243,18 +228,12 @@ tools = [
 ]
 
 
-# ============================================================
 # CONVERSATION MEMORY
-# ============================================================
-
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
 
-# ============================================================
 # AGENT
-# ============================================================
-
 if "agent" not in st.session_state:
 
     custome_prompt = """
@@ -324,10 +303,7 @@ Be friendly, concise, and informative.
     )
 
 
-# ============================================================
 # STREAMLIT UI
-# ============================================================
-
 st.set_page_config(
     page_title="ProBot",
     layout="wide"
@@ -336,15 +312,11 @@ st.set_page_config(
 st.title("🌱 ProBot")
 
 
-# ============================================================
 # SIDEBAR
-# ============================================================
-
 st.sidebar.title("ProBot Settings")
 
 
 # Clear conversation button
-
 if st.sidebar.button("🗑️ Clear Conversation"):
 
     st.session_state.messages = []
@@ -353,17 +325,13 @@ if st.sidebar.button("🗑️ Clear Conversation"):
 
 
 # Communication mode
-
 user_select = st.sidebar.selectbox(
     "How would you like to communicate?",
     ("Text", "Voice")
 )
 
 
-# ============================================================
 # DISPLAY OLD CONVERSATION
-# ============================================================
-
 for msg in st.session_state.messages:
 
     with st.chat_message(msg["role"]):
@@ -380,10 +348,7 @@ for msg in st.session_state.messages:
             st.markdown(msg["content"])
 
 
-# ============================================================
 # VISUALIZATION
-# ============================================================
-
 st.sidebar.subheader("Upload for Visualization")
 
 file = st.sidebar.file_uploader(
@@ -440,16 +405,9 @@ if file and st.sidebar.button("Generate Charts"):
         st.error(str(e))
 
 
-# ============================================================
-# FUNCTION TO RUN AGENT WITH MEMORY
-# ============================================================
-
 def run_agent(user_input):
 
-    # --------------------------------------------------------
     # Add user's message to memory
-    # --------------------------------------------------------
-
     st.session_state.messages.append(
         {
             "role": "user",
@@ -457,10 +415,7 @@ def run_agent(user_input):
         }
     )
 
-    # --------------------------------------------------------
     # Convert Streamlit messages to LangChain messages
-    # --------------------------------------------------------
-
     conversation = []
 
     for msg in st.session_state.messages:
@@ -476,26 +431,16 @@ def run_agent(user_input):
             (role, content)
         )
 
-    # --------------------------------------------------------
     # Send ENTIRE conversation to the agent
-    # --------------------------------------------------------
-
     response = st.session_state.agent.invoke(
         {
             "messages": conversation
         }
     )
 
-    # --------------------------------------------------------
-    # Get final answer
-    # --------------------------------------------------------
-
     ai_answer = response["messages"][-1].content
 
-    # --------------------------------------------------------
     # Save assistant answer
-    # --------------------------------------------------------
-
     st.session_state.messages.append(
         {
             "role": "assistant",
@@ -506,10 +451,7 @@ def run_agent(user_input):
     return ai_answer
 
 
-# ============================================================
 # TEXT CHAT
-# ============================================================
-
 if user_select == "Text":
 
     if prompt := st.chat_input("Ask Anything....."):
@@ -527,10 +469,7 @@ if user_select == "Text":
                 st.markdown(ai_answer)
 
 
-# ============================================================
 # VOICE CHAT
-# ============================================================
-
 else:
 
     uploaded_file = st.audio_input(
